@@ -111,8 +111,8 @@ runs:
             ignore_patterns+=( -not -path "$pattern" )
           done < .clang-tidy-ignore
         fi
-        target_files=$(find "${package_paths[@]}" -type f \( -name '*.cpp' \) "${ignore_patterns[@]}")
-        echo "target-files=$target_files"
+        mapfile -t target_files < <(find "${package_paths[@]}" -type f \( -name '*.cpp' \) "${ignore_patterns[@]}")
+        echo "target-files=${target_files[*]}"
         echo "target-files=$target_files" >> $GITHUB_OUTPUT
       shell: bash
 
