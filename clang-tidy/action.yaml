@@ -103,7 +103,8 @@ runs:
     - name: Get target files
       id: get-target-files
       run: |
-        mapfile -t package_paths < <(colcon list --paths-only --packages-select "${{ inputs.target-packages }}")
+        read -ra target_packages <<< "${{ inputs.target-packages }}"
+        mapfile -t package_paths < <(colcon list --paths-only --packages-select "${target_packages[@]}")
         ignore_patterns=()
         if [ -f .clang-tidy-ignore ]; then
           while IFS= read -r pattern; do
