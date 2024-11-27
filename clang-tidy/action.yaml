@@ -103,14 +103,14 @@ runs:
     - name: Get target files
       id: get-target-files
       run: |
-        package_path=$(colcon list --paths-only --packages-select ${{ inputs.target-packages }})
+        mapfile -t package_paths < <(colcon list --paths-only --packages-select "${{ inputs.target-packages }}")
         ignore_patterns=()
         if [ -f .clang-tidy-ignore ]; then
           while IFS= read -r pattern; do
             ignore_patterns+=( -not -path "$pattern" )
           done < .clang-tidy-ignore
         fi
-        target_files=$(find "$package_path" -type f \( -name '*.cpp' \) "${ignore_patterns[@]}")
+        target_files=$(find "${package_paths[@]}" -type f \( -name '*.cpp' \) "${ignore_patterns[@]}")
         echo "target-files=$target_files"
         echo "target-files=$target_files" >> $GITHUB_OUTPUT
       shell: bash
